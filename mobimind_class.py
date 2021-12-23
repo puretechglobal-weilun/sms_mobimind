@@ -121,7 +121,7 @@ def get_keyword(country,gateway,operator,shortcode,keyword):
 
 def get_subscriber(country,gateway,operator,shortcode,keyword,msisdn):
     dynamodb = boto3.resource("dynamodb")
-    table = dynamodb.Table("subscriber_"+ dn_data["gateway"])
+    table = dynamodb.Table("subscriber_"+ gateway)
     rid = country + "_" + gateway + "_" + operator + "_" + shortcode + "_" + keyword + "_" + msisdn 
     response = table.query(
         IndexName="msisdn-rid-index",
