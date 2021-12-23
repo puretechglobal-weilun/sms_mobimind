@@ -42,7 +42,8 @@ def handler(event, context):
             function_trigger = "skip"
 
         return {
-            ('"%s"' % final_class+function)  :   function_trigger
+            "class" : str(final_class),
+            str(function) : function_trigger
         }
     else:
         return {
