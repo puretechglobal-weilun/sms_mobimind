@@ -32,7 +32,7 @@ def insert_mo(function_json):
         "mo_type": mo_type,
         "process_status": "processing"
     }
-    return json.dumps(insert_params)
+    return insert_params
     
 def mo_parser_message(mo_message):
     parser_params = {}
@@ -85,7 +85,7 @@ def process_subscriber_add_data(function_json):
         original_request_json[key] = str(value)
     subscriber_data["country"] = original_request_json["country"]
     subscriber_data["gateway"] = original_request_json["gateway"]
-    return json.dumps(subscriber_data)
+    return subscriber_data
     
 def process_send_sms(function_json):
     if function_json["message_key"] == "welcome":
@@ -97,7 +97,7 @@ def process_send_sms(function_json):
         sqs = boto3.resource("sqs")
         queue = sqs.get_queue_by_name(QueueName=function_json["gateway"]+"_"+function_json["country"]+"_fast")
         response = queue.send_message(MessageBody=message_body)
-        return json.dumps(response)
+        return response
     elif function_json["message_key"] == "duplicate_subscription":
         return function_json["message_key"]+" do nothing"
     elif function_json["message_key"] == "non_subscriber":

@@ -32,7 +32,7 @@ def insert_mo(function_json):
         "mo_type": mo_type,
         "process_status": "processing"
     }
-    return json.dumps(insert_params)
+    return insert_params
     
 def mo_parser_message(mo_message):
     parser_params = {}
