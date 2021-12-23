@@ -121,7 +121,7 @@ def get_keyword(country,gateway,operator,shortcode,keyword):
 
 def get_subscriber(country,gateway,operator,shortcode,keyword,msisdn):
     dynamodb = boto3.resource("dynamodb")
-    table = dynamodb.Table(gateway + "_subscriber")
+    table = dynamodb.Table("subscriber_"+ dn_data["gateway"])
     rid = country + "_" + gateway + "_" + operator + "_" + shortcode + "_" + keyword + "_" + msisdn 
     response = table.query(
         IndexName="msisdn-rid-index",
@@ -152,7 +152,7 @@ def update_dn(dn_json):
     #update / create MT
     dynamodb = boto3.resource("dynamodb")
     dynamoDB_status = ""
-    table = dynamodb.Table( dn_data["gateway"] + "_mt")
+    table = dynamodb.Table( "mt_"+ dn_data["gateway"])
     dynamoDB_status  = table.update_item(
         Key={"mt_id": dn_data["msg_id"],"msisdn": dn_data["msisdn"] },
         UpdateExpression="SET dn_code = :dn_code , mt_code = :mt_code",
@@ -185,7 +185,7 @@ def update_dn(dn_json):
     # msg_id = mt_json["mt_id"]
     
     
-    # table = dynamodb.Table(dn_data["gateway"] + "_mt")
+    # table = dynamodb.Table("mt_"+ dn_data["gateway"])
     # dynamoDB_status = table.put_item(Item=mt_json)
     dynamoDB_status = dynamoDB_status["ResponseMetadata"]["HTTPStatusCode"]
     if dynamoDB_status == 200:
