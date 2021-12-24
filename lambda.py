@@ -13,7 +13,7 @@ def handler(event, context):
         # assign the default variable 
         trigger = "yes"
         file_name         = ""
-        response_data = {}
+        response_data = ""
         class_file          = __import__(params_json["gateway"]+"_"+"class") #import the default class file
         special_class_file  = params_json["gateway"]+"_"+params_json["country"]+"_"+"class"
         checking            = os.path.exists(special_class_file+".py") 
@@ -39,14 +39,13 @@ def handler(event, context):
 
         if trigger == "yes":
             try:
-                response_data['response_data'] = getattr(file_name, function)(params_json)
+                response_data = getattr(file_name, function)(params_json)
             except Exception as e:
-                response_data['response_data'] = "ERROR FROM function("+function+"): "+str(e)
+                response_data = "ERROR FROM function("+function+"): "+str(e)
             else:
-                response_data['result']         = 'success'
-                response_data['description']    = 'ok'
+                pass
         else:
-            response_data["response_data"] = "skip"
+            response_data = "skip"
 
         return {
             str(function) : response_data,
