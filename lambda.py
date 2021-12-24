@@ -12,7 +12,7 @@ def handler(event, context):
     if params_json["country"] and params_json["gateway"]: #params_json["country"] and params_json["gateway"] is the much
         # assign the default variable 
         trigger = "yes"
-        final_class         = ""
+        file_name         = ""
         class_file          = __import__(params_json["gateway"]+"_"+"class") #import the default class file
         special_class_file  = params_json["gateway"]+"_"+params_json["country"]+"_"+"class"
         checking            = os.path.exists(special_class_file+".py") 
@@ -22,28 +22,34 @@ def handler(event, context):
             # special_function    = params_json["gateway"]+"_"+params_json["country"]+"_"+function
             checking = function in dir(special_class_file) 
             if checking == True: # check the function is inside the file 
-                final_class     = special_class_file
+                file_name     = special_class_file
             else: # run the default file
                 checking = function in dir(class_file)
                 if checking == True: # check the function is inside the default file 
-                    final_class     = class_file
+                    file_name     = class_file
                 else:
                     trigger = "no"
         else:
             checking = function in dir(class_file)
             if checking == True: # check the function is inside the default file 
-                final_class     = class_file
+                file_name     = class_file
             else:
                 trigger = "no"
 
         if trigger == "yes":
-            function_trigger = getattr(final_class, function)(params_json) #trigger function and return something
+            try:
+                response_data['response_data'] = getattr(file_name, function)(params_json)
+            except Exception as e:
+                response_data['response_data'] = "ERROR FROM function("+function+"): "+str(e)
+            else:
+                response_data['result']         = 'success'
+                response_data['description']    = 'ok'
         else:
-            function_trigger = "skip"
+            response_data["response_data"] = "skip"
 
         return {
-            str(function) : function_trigger,
-            "class" : str(final_class)
+            str(function) : response_data,
+            "class" : str(file_name)
         }
     else:
         return {
