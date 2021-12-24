@@ -13,6 +13,7 @@ def handler(event, context):
         # assign the default variable 
         trigger = "yes"
         file_name         = ""
+        response_data = {}
         class_file          = __import__(params_json["gateway"]+"_"+"class") #import the default class file
         special_class_file  = params_json["gateway"]+"_"+params_json["country"]+"_"+"class"
         checking            = os.path.exists(special_class_file+".py") 
